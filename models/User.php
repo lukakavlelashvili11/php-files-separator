@@ -11,5 +11,7 @@ class User{
     public function read(){
         $query = 'SELECT * from' . $this->table;
         $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
     }
 }
