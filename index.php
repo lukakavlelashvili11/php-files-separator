@@ -73,12 +73,12 @@
                 <div class="inputs">
                     <button id="choose-button" class="choose-button">Choose files</button>
                     <input type="file" id="file" hidden multiple>
-                    <input class="input" type="text" placeholder="Zip name(optional)"/>
+                    <input id="zipName" class="input" type="text" placeholder="Zip name(optional)"/>
                     <div id="fileNames" class="input"></div>
                     <div class="radio-buttons">
                         <div>
                             <label>Sort by type(df)</label>
-                            <input class="radio" type="radio" name="sort">
+                            <input id="sortByType" class="radio" type="radio" name="sort" checked="checked">
                         </div>
                         <div>
                             <input class="radio" type="radio" name="sort">
@@ -112,6 +112,12 @@
                 for(var i = 0; i < files.length; i++) {
                     formData.append('files[]', files[i]);
                 }
+                if($('#sortByType').is(":checked"))
+                    formData.append('sortType','Type');
+                else
+                    formData.append('sortType','Extension');
+                if(!!$('#zipName').val())
+                    formData.append('name',$('#zipName').val());
                 $.ajax({
                     method: 'POST',
                     url: 'web.php',
@@ -119,6 +125,9 @@
                     processData: false,
                     contentType: false,
                     success(res){
+                        console.log(res);
+                    },
+                    error(res){
                         console.log(res);
                     }
                 });

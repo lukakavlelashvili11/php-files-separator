@@ -1,0 +1,15 @@
+{
+    "name": "user/php-files-separator",
+    "authors": [
+        {
+            "name": "luka kavlelashvili",
+            "email": "lukakavlelashvili10@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "require": {}
+}
