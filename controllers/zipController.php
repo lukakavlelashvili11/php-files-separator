@@ -2,42 +2,33 @@
 
 namespace app\controllers;
 
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use ZipArchive;
 
 class zipController{
 
     private $files = [];
     private $zip;
+    private $zip_name;
 
     public function __construct($files,$details){
         $this->files = $files['files'];
         $this->zip = new ZipArchive();
 
         if(isset($details['name'])){
-            $zip_name = htmlspecialchars($details['name']).'.zip';
+            $name = htmlspecialchars($details['name']).'.zip';
         }else{
-            $zip_name = time().".zip";
+            $name = time().".zip";
         }
-
+        $zip_name = realpath('uploads').'/'.$name;
+        $this->zip_name = $name;
         $this->zip->open($zip_name,(ZipArchive::CREATE | ZipArchive::OVERWRITE));
 
         if(isset($details['sortType'])){
             $this->{'sortBy'.$details['sortType']}($zip_name);
         }
-
-        // return $this->getDir($zip_name);
     }
 
-    public function sortByType($name){
-        // $dir = 'uploads';
-        // $zip_file = $name;
-        // $rootPath = realpath($dir);
-        // $files = new RecursiveIteratorIterator(
-        //     new RecursiveDirectoryIterator($rootPath),
-        //     RecursiveIteratorIterator::LEAVES_ONLY
-        // );
+    public function sortByType(): void{
         for($i = 0;$i < count($this->files['tmp_name']);$i++){
             if($this->files['size'][$i] != 0){
                 $content = file_get_contents($this->files['tmp_name'][$i]);
@@ -45,6 +36,7 @@ class zipController{
                 $this->zip->addFromString($file_name.'/'.$this->files['name'][$i],$content);
             }
         }
+        
     }
 
     public function sortByExtension(): void{
@@ -57,9 +49,7 @@ class zipController{
         }
     }
 
-    // public function getDir($name){
-    //     chdir('..');
-    //     rename($name,'uploads/'.$name);
-    //     return 'uploads/'.$name;
-    // }
+    public function getDir(): string{
+        return $this->zip_name;
+    }
 }
